@@ -3,12 +3,19 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { plainToClass } from 'class-transformer';
 
-export function Serialize(dto: any) {
+//This interaces describes that the type
+//Needs to be a class, any class
+//So we can't pass string, numbers etc...
+interface ClassConstructor {
+  new (...args: any[]): {};
+}
+
+export function Serialize(dto: ClassConstructor) {
   return UseInterceptors(new SerializeInterceptor(dto));
 }
 
 export class SerializeInterceptor implements NestInterceptor {
-  constructor(private dto: any) {}
+  constructor(private dto: ClassConstructor) {}
 
   intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> {
     //Run before request is handled by route handler
