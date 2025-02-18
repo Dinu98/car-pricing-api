@@ -39,4 +39,16 @@ export class UsersService {
 
     return this.usersRepository.save(user);
   }
+
+  async remove(id: number) {
+    //In order to use hooks, we'll take the findOne -> remove approach
+    //This is not efficient because it requires to trips to the DB
+    const user = await this.findOne(id);
+
+    if (!user) {
+      throw new Error(`User with id ${id} not found`);
+    }
+
+    return this.usersRepository.remove(user);
+  }
 }
