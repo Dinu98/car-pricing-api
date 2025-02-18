@@ -7,6 +7,8 @@ async function bootstrap() {
 
   app.useGlobalPipes(
     new ValidationPipe({
+      //This is making sure that any additional properties
+      //Are stripped of the request before reaching controller handler
       whitelist: true
     })
   );
