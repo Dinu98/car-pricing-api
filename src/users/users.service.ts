@@ -14,4 +14,29 @@ export class UsersService {
 
     return this.usersRepository.save(user);
   }
+
+  findOne(id: number) {
+    return this.usersRepository.findOneBy({ id });
+  }
+
+  find(email: string) {
+    return this.usersRepository.find({ where: { email } });
+  }
+
+  //Partial is built in typescript and let's you specify
+  //An object with at least one or none of the User entity attributes
+  async updateOne(id: number, attributes: Partial<User>) {
+    //In order to use hooks, we'll take the findOne -> make the update -> save approach
+    //This is not efficient because it requires to trips to the DB
+
+    const user = await this.findOne(id);
+
+    if (!user) {
+      throw new Error(`User with id ${id} not found`);
+    }
+
+    Object.assign(user, attributes);
+
+    return this.usersRepository.save(user);
+  }
 }
